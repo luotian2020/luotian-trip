@@ -99,22 +99,7 @@ window.HUANIAO_MAP_DATA = [
                     "./pose/shatan/37/15.png",
                     "./pose/shatan/37/16.png",
                 ]
-            },
-            {
-                name: "薇尔莉特",
-                desc: "退潮的时候适合去拍，礁石",
-                scenes: ["./scene/nanaoshatan/nanaoshatan.jpg"],
-                poses: [
-                    "./pose/shatan/weierlite/1.png",
-                    "./pose/shatan/weierlite/3.png",
-                    "./pose/shatan/weierlite/4.png",
-                    "./pose/shatan/weierlite/5.png",
-                    "./pose/shatan/weierlite/6.png",
-                    "./pose/shatan/weierlite/7.png",
-                    "./pose/shatan/weierlite/8.png",
-
-                ]
-            },
+            }
         ]
     },
     {
@@ -133,15 +118,6 @@ window.HUANIAO_MAP_DATA = [
                     "./pose/zhiaishufang/shouanren/4.png",
                     "./pose/zhiaishufang/shouanren/5.png",
                 ]
-            },
-             {
-                name: "薇尔莉特",
-                desc: "走进白房子或者佛手石",
-                scenes: ["./scene/zhiaishufang/gangqin.png", "./scene/zhiaishufang/men.png"],
-                poses: [
-                    "./pose/zhiaishufang/weierlite/1.png",
-                    "./pose/zhiaishufang/weierlite/2.png",
-                ]
             }
         ]
     },
@@ -156,6 +132,15 @@ window.HUANIAO_MAP_DATA = [
                 scenes: ["./scene/caopingqiuqian/qiuqian.jpg"],
                 poses: [
                     "./pose/qiuqian/shouanren/1.jpg",
+                ]
+            },
+             {
+                name: "茉莉",
+                desc: "茉莉坐在秋千上，双手握住绳子，微微低头，侧身看向镜头，展现出温柔和优雅的气质",
+                scenes: ["./scene/caopingqiuqian/qiuqian.jpg"],
+                poses: [
+                    "./pose/qiuqian/moli/1.jpg",
+                    "./pose/qiuqian/moli/2.jpg",
                 ]
             }
         ]
