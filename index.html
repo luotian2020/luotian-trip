@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>旅拍-规划</title>
+    <script type="text/javascript">
+        window._AMapSecurityConfig = { securityJsCode: 'b87c66425b6fde8aa84ab7d824e9142f' }
+    </script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=c522125c64773c83fd1b33f29181dc04"></script>
+    
+    <script src="./data.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; font-family: -apple-system, system-ui, sans-serif; overflow: hidden; background: #f3f4f6; }
+        #container { width: 100%; height: 100%; position: absolute; }
+        .control-panel { position: absolute; top: 12px; left: 12px; right: 12px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+        .panel-row { display: flex; align-items: center; gap: 8px; overflow-x: auto; white-space: nowrap; padding-bottom: 2px; }
+        .mode-title { font-size: 12px; color: #6b7280; font-weight: bold; min-width: 60px; }
+        .btn { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #e5e7eb; background: #f3f4f6; color: #4b5563; transition: all 0.2s; }
+        .btn.active { background: #3b82f6; color: white; border-color: #3b82f6; box-shadow: 0 2px 6px rgba(59,130,246,0.3); }
+        .btn-char.active { background: #10b981; color: white; border-color: #10b981; box-shadow: 0 2px 6px rgba(16,185,129,0.3); }
+        .info-panel { position: absolute; background: rgba(255, 255, 255, 0.98); box-shadow: 0 -4px 24px rgba(0,0,0,0.15); z-index: 999; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; overflow: hidden; }
+        @media (min-width: 768px) { .info-panel { top: 120px; right: -400px; width: 380px; height: calc(100% - 140px); border-radius: 16px; } .info-panel.active { right: 20px; } }
+        @media (max-width: 767px) { .info-panel { bottom: -80%; left: 0; width: 100%; height: 70%; border-radius: 20px 20px 0 0; } .info-panel.active { bottom: 0; } }
+        .panel-header { padding: 16px; background: #1e40af; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .panel-header h3 { font-size: 16px; font-weight: 600; }
+        .close-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+        .panel-body { padding: 16px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .char-tabs-container { margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+        .char-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .desc-text { font-size: 13px; color: #374151; line-height: 1.6; background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #3b82f6; }
+        .img-section { margin-top: 16px; }
+        .img-section h4 { font-size: 12px; color: #4b5563; margin-bottom: 8px; font-weight: bold; }
+        .img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .img-grid img { width: 100%; height: 85px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid #e5e7eb; }
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox img { max-width: 95%; max-height: 85%; object-fit: contain; }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel">
+        <div class="panel-row">
+            <span class="mode-title">🗺️ 规划模式:</span>
+            <button id="modePoint" class="btn active" onclick="switchMode('point')">点位模式 (全景)</button>
+            <button id="modeChar" class="btn" onclick="switchMode('char')">角色模式 (换装动线)</button>
+        </div>
+        <div id="charSelectorRow" class="panel-row" style="display: none; border-top: 1px dashed #e5e7eb; padding-top: 8px;">
+            <span class="mode-title">👗 选择角色:</span>
+            <div id="charFilterButtons" style="display: flex; gap: 6px; overflow-x: auto;"></div>
+        </div>
+    </div>
+
+    <div id="container"></div>
+
+    <div id="infoPanel" class="info-panel">
+        <div class="panel-header">
+            <h3 id="locationTitle">地点名称</h3>
+            <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+            <div id="popupCharTabSection" class="char-tabs-container">
+                <span style="font-size: 11px; color: #9ca3af; font-weight: bold; margin-bottom: 6px; display: block;">👥 本地拍摄角色：</span>
+                <div id="charTabs" class="char-tabs"></div>
+            </div>
+            <div id="charContent">
+                <div class="info-item">
+                    <p id="locationDesc" class="desc-text">暂无简介</p>
+                </div>
+                <div class="img-section">
+                    <h4>📸 该角色踩点/环境例图</h4>
+                    <div id="sceneGrid" class="img-grid"></div>
+                </div>
+                <div class="img-section">
+                    <h4>💃 预定动作/分镜参考</h4>
+                    <div id="poseGrid" class="img-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="" alt="放大图">
+    </div>
+
+    <script>
+        // 从全局 window 对象读取分离出去的数据
+        const huaniaoPoints = window.HUANIAO_MAP_DATA || [];
+
+        let map, currentMode = 'point', selectedCharacter = '', activeMarkers = [], currentPolyline = null;
+        let currentPointData = null;
+
+        function getAllCharacters() {
+            const charSet = new Set();
+            huaniaoPoints.forEach(p => p.characters.forEach(c => charSet.add(c.name)));
+            return Array.from(charSet);
+        }
+
+        window.onload = function() { 
+            if(huaniaoPoints.length === 0) {
+                alert("未检测到有效拍摄数据，请检查 data.js 是否配置正确！");
+                return;
+            }
+            initMap(); 
+            initFilterUI(); 
+        }
+
+        function initMap() {
+            try {
+                map = new AMap.Map('container', { viewMode: '2D', zoom: 15.5, center: [122.6845, 30.8435] });
+                renderMapElements();
+            } catch (e) { alert("地图加载失败！"); }
+        }
+
+        function initFilterUI() {
+            const container = document.getElementById('charFilterButtons');
+            const chars = getAllCharacters();
+            container.innerHTML = chars.map(char => `<button class="btn btn-char" onclick="selectCharacter('${char}', this)">${char}</button>`).join('');
+        }
+
+        function renderMapElements() {
+            activeMarkers.forEach(m => m.setMap(null));
+            activeMarkers = [];
+            if (currentPolyline) { currentPolyline.setMap(null); currentPolyline = null; }
+            closePanel();
+
+            const defaultIcon = new AMap.Icon({
+                size: new AMap.Size(25, 34),
+                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+                imageSize: new AMap.Size(25, 34)
+            });
+
+            let linePath = [];
+
+            huaniaoPoints.forEach(point => {
+                let isMatch = false;
+                let matchedCharIndex = 0;
+
+                if (currentMode === 'point') {
+                    isMatch = true;
+                } else if (currentMode === 'char' && selectedCharacter) {
+                    const idx = point.characters.findIndex(c => c.name === selectedCharacter);
+                    if (idx !== -1) {
+                        isMatch = true;
+                        matchedCharIndex = idx;
+                        linePath.push(point.position);
+                    }
+                }
+
+                if (isMatch) {
+                    const marker = new AMap.Marker({
+                        position: point.position,
+                        title: point.title,
+                        icon: defaultIcon,
+                        offset: new AMap.Pixel(-12, -34),
+                        map: map
+                    });
+                    marker.on('click', () => { showPanel(point, matchedCharIndex); });
+                    activeMarkers.push(marker);
+                }
+            });
+
+            if (currentMode === 'char' && linePath.length > 1) {
+                currentPolyline = new AMap.Polyline({
+                    path: linePath,
+                    isOutline: true,
+                    outlineColor: '#ffffff',
+                    borderWeight: 2,
+                    strokeColor: '#10b981',
+                    strokeOpacity: 0.9,
+                    strokeWeight: 4,
+                    strokeStyle: "dashed",
+                    strokeDasharray: [10, 5],
+                    lineJoin: 'round',
+                    map: map
+                });
+                map.setFitView([currentPolyline]);
+            }
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('modePoint').classList.toggle('active', mode === 'point');
+            document.getElementById('modeChar').classList.toggle('active', mode === 'char');
+            document.getElementById('charSelectorRow').style.display = mode === 'char' ? 'flex' : 'none';
+
+            if (mode === 'point') {
+                selectedCharacter = '';
+                document.querySelectorAll('.btn-char').forEach(b => b.classList.remove('active'));
+            } else {
+                const firstCharBtn = document.querySelector('.btn-char');
+                if (firstCharBtn) firstCharBtn.click();
+                return;
+            }
+            renderMapElements();
+        }
+
+        function selectCharacter(charName, element) {
+            selectedCharacter = charName;
+            document.querySelectorAll('.btn-char').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            renderMapElements();
+        }
+
+        function showPanel(data, matchedIndex = 0) {
+            currentPointData = data;
+            document.getElementById('locationTitle').innerText = data.title;
+            const tabsContainer = document.getElementById('charTabs');
+            
+            if (currentMode === 'char') {
+                document.getElementById('popupCharTabSection').style.display = 'none';
+                renderCharacterDetail(data.characters[matchedIndex]);
+            } else {
+                document.getElementById('popupCharTabSection').style.display = 'block';
+                tabsContainer.innerHTML = data.characters.map((char, index) => {
+                    return `<button class="char-tab btn ${index === matchedIndex ? 'active' : ''}" style="border-radius:12px; padding:4px 10px; font-size:12px;" onclick="switchCharacter(${index}, this)">${char.name}</button>`;
+                }).join('');
+                renderCharacterDetail(data.characters[matchedIndex]);
+            }
+
+            document.getElementById('infoPanel').classList.add('active');
+            map.panTo([data.position[0], data.position[1] - 0.0012]);
+        }
+
+        function switchCharacter(index, element) {
+            document.querySelectorAll('.char-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            if (currentPointData && currentPointData.characters[index]) {
+                renderCharacterDetail(currentPointData.characters[index]);
+            }
+        }
+
+        function renderCharacterDetail(charData) {
+            document.getElementById('locationDesc').innerText = charData.desc;
+            const sceneGrid = document.getElementById('sceneGrid');
+            sceneGrid.innerHTML = charData.scenes.map(url => `<img src="${url}" alt="环境" onclick="openLightbox('${url}')">`).join('');
+            const poseGrid = document.getElementById('poseGrid');
+            poseGrid.innerHTML = charData.poses.map(url => `<img src="${url}" alt="动作" onclick="openLightbox('${url}')">`).join('');
+        }
+
+        function closePanel() { document.getElementById('infoPanel').classList.remove('active'); }
+        function openLightbox(url) { const img = document.getElementById('lightboxImg'); img.src = url; document.getElementById('lightbox').classList.add('active'); }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+    </script>
+</body>
+</html>
