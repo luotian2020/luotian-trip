@@ -3,247 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>旅拍-规划</title>
-    <script type="text/javascript">
-        window._AMapSecurityConfig = { securityJsCode: 'b87c66425b6fde8aa84ab7d824e9142f' }
-    </script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=c522125c64773c83fd1b33f29181dc04"></script>
-    
+    <title>花鸟岛旅拍行程</title>
+    <script>window._AMapSecurityConfig = { securityJsCode: 'b87c66425b6fde8aa84ab7d824e9142f' };</script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=c522125c64773c83fd1b33f29181dc04"></script>
     <script src="./data.js"></script>
-
     <style>
+        :root { --ink: #18332e; --sea: #0b7166; --foam: #eaf4ee; --sand: #f7f2e8; --coral: #d96d4e; --muted: #6d7973; --line: #d9e2da; --card: rgba(255,255,255,.96); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { width: 100%; height: 100%; font-family: -apple-system, system-ui, sans-serif; overflow: hidden; background: #f3f4f6; }
-        #container { width: 100%; height: 100%; position: absolute; }
-        .control-panel { position: absolute; top: 12px; left: 12px; right: 12px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding: 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 999; display: flex; flex-direction: column; gap: 10px; }
-        .panel-row { display: flex; align-items: center; gap: 8px; overflow-x: auto; white-space: nowrap; padding-bottom: 2px; }
-        .mode-title { font-size: 12px; color: #6b7280; font-weight: bold; min-width: 60px; }
-        .btn { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #e5e7eb; background: #f3f4f6; color: #4b5563; transition: all 0.2s; }
-        .btn.active { background: #3b82f6; color: white; border-color: #3b82f6; box-shadow: 0 2px 6px rgba(59,130,246,0.3); }
-        .btn-char.active { background: #10b981; color: white; border-color: #10b981; box-shadow: 0 2px 6px rgba(16,185,129,0.3); }
-        .info-panel { position: absolute; background: rgba(255, 255, 255, 0.98); box-shadow: 0 -4px 24px rgba(0,0,0,0.15); z-index: 999; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; overflow: hidden; }
-        @media (min-width: 768px) { .info-panel { top: 120px; right: -400px; width: 380px; height: calc(100% - 140px); border-radius: 16px; } .info-panel.active { right: 20px; } }
-        @media (max-width: 767px) { .info-panel { bottom: -80%; left: 0; width: 100%; height: 70%; border-radius: 20px 20px 0 0; } .info-panel.active { bottom: 0; } }
-        .panel-header { padding: 16px; background: #1e40af; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .panel-header h3 { font-size: 16px; font-weight: 600; }
-        .close-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
-        .panel-body { padding: 16px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
-        .char-tabs-container { margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
-        .char-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .desc-text { font-size: 13px; color: #374151; line-height: 1.6; background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #3b82f6; }
-        .img-section { margin-top: 16px; }
-        .img-section h4 { font-size: 12px; color: #4b5563; margin-bottom: 8px; font-weight: bold; }
-        .img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .img-grid img { width: 100%; height: 85px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid #e5e7eb; }
-        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        html, body, #container { width: 100%; height: 100%; }
+        body { color: var(--ink); background: var(--sand); font-family: "Noto Serif SC", "Songti SC", "Microsoft YaHei", sans-serif; overflow: hidden; }
+        button { font: inherit; }
+        #container { position: absolute; inset: 0; }
+        .topbar { position: fixed; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; z-index: 10; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+        .brand, .weather-note { pointer-events: auto; box-shadow: 0 10px 30px rgba(17, 54, 45, .15); }
+        .brand { padding: 11px 14px 10px; border-radius: 16px; color: white; background: var(--ink); }
+        .brand-kicker { display: block; color: #b9d7cd; font-size: 10px; font-weight: 700; letter-spacing: .16em; }
+        .brand strong { display: block; margin-top: 2px; font-size: 17px; letter-spacing: .04em; }
+        .weather-note { max-width: 144px; padding: 9px 10px; border: 1px solid rgba(255,255,255,.7); border-radius: 14px; background: rgba(255,255,255,.91); color: #49605a; font-size: 11px; font-weight: 700; line-height: 1.45; }
+        .controls { position: fixed; top: 94px; left: 12px; right: 12px; z-index: 10; display: flex; flex-direction: column; gap: 7px; }
+        .mode-switch, .character-strip { width: fit-content; max-width: 100%; display: flex; gap: 4px; padding: 4px; border: 1px solid rgba(255,255,255,.8); border-radius: 14px; background: var(--card); box-shadow: 0 10px 24px rgba(17, 54, 45, .12); overflow-x: auto; }
+        .mode-btn, .character-btn { border: 0; border-radius: 10px; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .mode-btn { padding: 8px 11px; }
+        .mode-btn.active { background: var(--ink); color: white; }
+        .character-strip { display: none; padding: 5px; }
+        .character-strip.visible { display: flex; }
+        .character-label { align-self: center; padding: 0 4px 0 6px; color: #88958d; font-size: 10px; font-weight: 800; letter-spacing: .08em; white-space: nowrap; }
+        .character-btn { padding: 7px 10px; background: #f1f5f1; }
+        .character-btn.active { background: var(--sea); color: white; }
+        .map-legend { position: fixed; right: 12px; top: 177px; z-index: 8; padding: 9px 10px; border-radius: 12px; background: rgba(255,255,255,.9); box-shadow: 0 8px 22px rgba(17,54,45,.12); color: #53645e; font-size: 10px; line-height: 1.5; }
+        .map-legend b { color: var(--sea); }
+        .trip-bar { position: fixed; right: 0; bottom: 0; left: 0; z-index: 12; min-height: 104px; padding: 11px 16px calc(11px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; background: var(--ink); color: white; box-shadow: 0 -8px 30px rgba(14,42,36,.22); transition: transform .25s ease; }
+        body.sheet-open .trip-bar { transform: translateY(120%); }
+        .trip-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .trip-kicker { color: #a9c9bd; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+        .trip-title { margin-top: 2px; font-size: 15px; font-weight: 800; }
+        .trip-stat { padding: 5px 8px; border: 1px solid #4d766b; border-radius: 9px; color: #d5e8df; font-size: 11px; font-weight: 700; white-space: nowrap; }
+        .trip-route { display: flex; gap: 7px; margin-top: 9px; overflow-x: auto; scrollbar-width: none; }
+        .trip-route::-webkit-scrollbar { display: none; }
+        .trip-stop { flex: 0 0 auto; padding: 6px 9px; border: 1px solid #41685e; border-radius: 999px; background: #24473f; color: #e8f2ed; font-size: 11px; white-space: nowrap; }
+        .trip-stop.done { border-color: #7abca8; color: #a9ead4; text-decoration: line-through; }
+        .trip-empty { color: #b4cec4; font-size: 12px; }
+        .info-panel { position: fixed; z-index: 20; display: flex; flex-direction: column; overflow: hidden; background: var(--card); box-shadow: 0 -14px 38px rgba(14,42,36,.25); }
+        .sheet-handle { flex: 0 0 auto; width: 38px; height: 4px; margin: 9px auto 3px; border-radius: 999px; background: #c4d1ca; }
+        .panel-header { display: flex; align-items: center; justify-content: space-between; padding: 5px 18px 12px; }
+        .panel-label { color: var(--sea); font-size: 10px; font-weight: 900; letter-spacing: .14em; }
+        .close-btn { width: 32px; height: 32px; border: 0; border-radius: 50%; background: #edf3ee; color: var(--ink); cursor: pointer; font-size: 19px; }
+        .panel-body { overflow-y: auto; padding: 0 18px calc(28px + env(safe-area-inset-bottom)); }
+        .location-hero { padding: 15px; border-radius: 18px; background: linear-gradient(135deg, #e8f2e9 0%, #f7eee0 100%); }
+        .location-hero-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+        .location-hero h1 { font-size: 25px; letter-spacing: .03em; }
+        .priority { flex: 0 0 auto; padding: 5px 8px; border-radius: 8px; background: white; color: var(--coral); font-size: 11px; font-weight: 900; }
+        .meta-line { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+        .meta-chip { padding: 6px 8px; border-radius: 8px; background: rgba(255,255,255,.7); color: #3e5951; font-size: 11px; font-weight: 700; }
+        .conditions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .condition { padding: 4px 7px; border: 1px solid #bad0c3; border-radius: 999px; color: #42705f; font-size: 10px; font-weight: 800; }
+        .action-row { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 7px; margin-top: 12px; }
+        .action-btn { min-height: 38px; border: 1px solid #cddbd2; border-radius: 10px; background: white; color: #416057; cursor: pointer; font-size: 11px; font-weight: 800; }
+        .action-btn.primary { border-color: var(--sea); background: var(--sea); color: white; }
+        .action-btn.saved { border-color: #e3b7a8; background: #fff5ef; color: #ad4f38; }
+        .section { margin-top: 21px; }
+        .section-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
+        .section-title h2 { font-size: 14px; }
+        .section-title span { color: #89958e; font-size: 10px; }
+        .tip-card { position: relative; padding: 12px 13px 12px 15px; border: 1px solid #f0d8bd; border-radius: 12px; background: #fff9ef; color: #6d5140; font-size: 12px; line-height: 1.7; }
+        .tip-card::before { position: absolute; top: 12px; left: 0; width: 3px; height: calc(100% - 24px); border-radius: 0 4px 4px 0; background: var(--coral); content: ""; }
+        .char-tabs { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; }
+        .char-tab { flex: 0 0 auto; padding: 8px 11px; border: 1px solid var(--line); border-radius: 10px; background: white; color: #64726b; cursor: pointer; font-size: 12px; font-weight: 800; }
+        .char-tab.active { border-color: var(--ink); background: var(--ink); color: white; }
+        .desc { padding: 12px 13px; border-radius: 12px; background: #f2f6f2; color: #42534c; font-size: 12px; line-height: 1.7; }
+        .img-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+        .img-grid img { width: 100%; height: 91px; border: 0; border-radius: 10px; object-fit: cover; cursor: zoom-in; background: #e6ece7; }
+        .lightbox { position: fixed; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(9,24,20,.95); opacity: 0; pointer-events: none; transition: opacity .2s; }
         .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lightbox img { max-width: 95%; max-height: 85%; object-fit: contain; }
+        .lightbox img { max-width: calc(100% - 82px); max-height: 88vh; border-radius: 4px; object-fit: contain; transition: transform .18s ease; }
+        .lightbox-nav { position: absolute; top: 50%; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.34); border-radius: 50%; background: rgba(255,255,255,.14); color: white; cursor: pointer; font-size: 26px; line-height: 1; transform: translateY(-50%); }
+        .lightbox-nav:disabled { cursor: default; opacity: .28; }
+        .lightbox-prev { left: 14px; }
+        .lightbox-next { right: 14px; }
+        .lightbox-count { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); left: 50%; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.14); color: white; font-size: 11px; transform: translateX(-50%); }
+        .zoom-controls { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; display: flex; overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 11px; background: rgba(255,255,255,.14); }
+        .zoom-btn { width: 37px; height: 37px; border: 0; border-right: 1px solid rgba(255,255,255,.22); background: transparent; color: white; cursor: pointer; font-size: 20px; }
+        .zoom-btn:last-child { border-right: 0; font-size: 11px; font-weight: 800; }
+        @media (max-width: 767px) {
+            .info-panel { right: 0; bottom: 0; left: 0; height: min(78dvh, 650px); border-radius: 25px 25px 0 0; transform: translateY(105%); transition: transform .32s cubic-bezier(.22,.8,.26,1); }
+            .info-panel.active { transform: translateY(0); }
+        }
+        @media (min-width: 768px) {
+            .topbar { left: 24px; right: 24px; }
+            .controls { top: 110px; left: 24px; }
+            .map-legend { top: 110px; right: 24px; }
+            .trip-bar { right: auto; bottom: 24px; left: 24px; width: 390px; border-radius: 20px; }
+            .info-panel { top: 24px; right: 24px; bottom: 24px; width: 410px; border-radius: 24px; transform: translateX(120%); transition: transform .32s cubic-bezier(.22,.8,.26,1); }
+            .info-panel.active { transform: translateX(0); }
+            .sheet-handle { display: none; }
+        }
     </style>
 </head>
 <body>
-
-    <div class="control-panel">
-        <div class="panel-row">
-            <span class="mode-title">🗺️ 规划模式:</span>
-            <button id="modePoint" class="btn active" onclick="switchMode('point')">点位模式 (全景)</button>
-            <button id="modeChar" class="btn" onclick="switchMode('char')">角色模式 (换装动线)</button>
-        </div>
-        <div id="charSelectorRow" class="panel-row" style="display: none; border-top: 1px dashed #e5e7eb; padding-top: 8px;">
-            <span class="mode-title">👗 选择角色:</span>
-            <div id="charFilterButtons" style="display: flex; gap: 6px; overflow-x: auto;"></div>
-        </div>
+    <div class="topbar">
+        <div class="brand"><span class="brand-kicker">ZHOU SHAN · HUANIAO ISLAND</span><strong>旅拍行程</strong></div>
+        <div class="weather-note">出发前请确认潮汐<br>沙滩点位受退潮影响</div>
     </div>
 
+    <div class="controls">
+        <div class="mode-switch">
+            <button id="modePoint" class="mode-btn active" onclick="switchMode('point')">全部点位</button>
+            <button id="modeChar" class="mode-btn" onclick="switchMode('char')">角色动线</button>
+        </div>
+        <div id="characterStrip" class="character-strip"><span class="character-label">选择角色</span><div id="charFilterButtons"></div></div>
+    </div>
+    <div class="map-legend"><b>绿色虚线</b><br>换装拍摄动线</div>
     <div id="container"></div>
 
-    <div id="infoPanel" class="info-panel">
-        <div class="panel-header">
-            <h3 id="locationTitle">地点名称</h3>
-            <button class="close-btn" onclick="closePanel()">✕</button>
-        </div>
+    <section id="tripBar" class="trip-bar" aria-live="polite">
+        <div class="trip-head"><div><div id="tripKicker" class="trip-kicker">TODAY'S PLAN</div><div id="tripTitle" class="trip-title">从地图开始安排行程</div></div><div id="tripStat" class="trip-stat">0 站</div></div>
+        <div id="tripRoute" class="trip-route"></div>
+    </section>
+
+    <aside id="infoPanel" class="info-panel" aria-live="polite">
+        <div class="sheet-handle"></div>
+        <div class="panel-header"><span class="panel-label">LOCATION BRIEF</span><button class="close-btn" aria-label="关闭详情" onclick="closePanel()">×</button></div>
         <div class="panel-body">
-            <div id="popupCharTabSection" class="char-tabs-container">
-                <span style="font-size: 11px; color: #9ca3af; font-weight: bold; margin-bottom: 6px; display: block;">👥 本地拍摄角色：</span>
-                <div id="charTabs" class="char-tabs"></div>
-            </div>
-            <div id="charContent">
-                <div class="info-item">
-                    <p id="locationDesc" class="desc-text">暂无简介</p>
-                </div>
-                <div class="img-section">
-                    <h4>📸 该角色踩点/环境例图</h4>
-                    <div id="sceneGrid" class="img-grid"></div>
-                </div>
-                <div class="img-section">
-                    <h4>💃 预定动作/分镜参考</h4>
-                    <div id="poseGrid" class="img-grid"></div>
-                </div>
-            </div>
+            <section class="location-hero">
+                <div class="location-hero-top"><h1 id="locationTitle">地点名称</h1><span id="priority" class="priority">必去</span></div>
+                <div id="locationMeta" class="meta-line"></div>
+                <div id="conditions" class="conditions"></div>
+                <div class="action-row"><button id="saveButton" class="action-btn" onclick="togglePlan()">加入计划</button><button class="action-btn primary" onclick="openNavigation()">开始导航</button><button id="doneButton" class="action-btn" onclick="toggleComplete()">标记完成</button></div>
+            </section>
+            <section class="section"><div class="section-title"><h2>现场提醒</h2><span>出发前看一眼</span></div><div id="travelTip" class="tip-card"></div></section>
+            <section id="characterSection" class="section"><div class="section-title"><h2>拍摄角色</h2><span>切换查看参考</span></div><div id="charTabs" class="char-tabs"></div></section>
+            <section class="section"><div class="section-title"><h2>本次镜头重点</h2><span>先拍必需画面</span></div><p id="locationDesc" class="desc"></p></section>
+            <section class="section"><div class="section-title"><h2>环境与踩点</h2><span>点击放大</span></div><div id="sceneGrid" class="img-grid"></div></section>
+            <section class="section"><div class="section-title"><h2>动作参考</h2><span id="poseCount"></span></div><div id="poseGrid" class="img-grid"></div></section>
         </div>
-    </div>
+    </aside>
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <img id="lightboxImg" src="" alt="放大图">
+        <button id="lightboxPrev" class="lightbox-nav lightbox-prev" aria-label="上一张" onclick="event.stopPropagation(); showLightboxImage(-1)">‹</button>
+        <img id="lightboxImg" src="" alt="放大参考图" onclick="event.stopPropagation()">
+        <button id="lightboxNext" class="lightbox-nav lightbox-next" aria-label="下一张" onclick="event.stopPropagation(); showLightboxImage(1)">›</button>
+        <div class="zoom-controls" onclick="event.stopPropagation()"><button class="zoom-btn" aria-label="放大图片" onclick="changeLightboxZoom(.25)">＋</button><button class="zoom-btn" aria-label="缩小图片" onclick="changeLightboxZoom(-.25)">−</button><button class="zoom-btn" aria-label="还原图片" onclick="resetLightboxZoom()">还原</button></div>
+        <span id="lightboxCount" class="lightbox-count"></span>
     </div>
 
     <script>
-        // 从全局 window 对象读取分离出去的数据
         const huaniaoPoints = window.HUANIAO_MAP_DATA || [];
-
-        let map, currentMode = 'point', selectedCharacter = '', activeMarkers = [], currentPolyline = null;
+        let map;
+        let currentMode = 'point';
+        let selectedCharacter = '';
+        let activeMarkers = [];
+        let currentPolyline = null;
         let currentPointData = null;
+        let currentCharacterIndex = 0;
+        let currentCharacterData = null;
+        let lightboxItems = [];
+        let lightboxIndex = 0;
+        let lightboxZoom = 1;
+        let plannedPointIds = loadSet('huaniao-photo-plan');
+        let completedPointIds = loadSet('huaniao-photo-completed');
+
+        function loadSet(key) {
+            try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); } catch (error) { return new Set(); }
+        }
+
+        function saveSet(key, value) {
+            try { localStorage.setItem(key, JSON.stringify(Array.from(value))); } catch (error) { }
+        }
 
         function getAllCharacters() {
-            const charSet = new Set();
-            huaniaoPoints.forEach(p => p.characters.forEach(c => charSet.add(c.name)));
-            return Array.from(charSet);
+            const names = new Set();
+            huaniaoPoints.forEach(point => point.characters.forEach(character => names.add(character.name)));
+            return Array.from(names);
         }
 
-        window.onload = function() { 
-            if(huaniaoPoints.length === 0) {
-                alert("未检测到有效拍摄数据，请检查 data.js 是否配置正确！");
-                return;
-            }
-            initMap(); 
-            initFilterUI(); 
+        function getRoutePoints() {
+            if (currentMode === 'char' && selectedCharacter) return huaniaoPoints.filter(point => point.characters.some(character => character.name === selectedCharacter));
+            return huaniaoPoints.filter(point => plannedPointIds.has(point.id));
         }
 
-        function initMap() {
-            try {
-                map = new AMap.Map('container', { viewMode: '2D', zoom: 15.5, center: [122.6845, 30.8435] });
-                renderMapElements();
-            } catch (e) { alert("地图加载失败！"); }
+        function distanceBetween(first, second) {
+            const radians = Math.PI / 180;
+            const latitudeDelta = (second.position[1] - first.position[1]) * radians;
+            const longitudeDelta = (second.position[0] - first.position[0]) * radians;
+            const latitudeA = first.position[1] * radians;
+            const latitudeB = second.position[1] * radians;
+            const haversine = Math.sin(latitudeDelta / 2) ** 2 + Math.cos(latitudeA) * Math.cos(latitudeB) * Math.sin(longitudeDelta / 2) ** 2;
+            return 6371 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+        }
+
+        function routeStats(points) {
+            const shootMinutes = points.reduce((total, point) => total + point.duration, 0);
+            const distance = points.slice(1).reduce((total, point, index) => total + distanceBetween(points[index], point), 0);
+            const travelMinutes = Math.round(distance / 4.5 * 60);
+            return { distance, minutes: shootMinutes + travelMinutes };
+        }
+
+        function formatDuration(minutes) {
+            return minutes >= 60 ? `${Math.floor(minutes / 60)}小时${minutes % 60 ? `${minutes % 60}分` : ''}` : `${minutes}分`;
         }
 
         function initFilterUI() {
             const container = document.getElementById('charFilterButtons');
-            const chars = getAllCharacters();
-            container.innerHTML = chars.map(char => `<button class="btn btn-char" onclick="selectCharacter('${char}', this)">${char}</button>`).join('');
+            container.innerHTML = getAllCharacters().map(character => `<button class="character-btn" onclick="selectCharacter('${character}', this)">${character}</button>`).join('');
+        }
+
+        function initMap() {
+            map = new AMap.Map('container', { viewMode: '2D', zoom: 15.2, center: [122.6948, 30.848] });
+            renderMapElements();
         }
 
         function renderMapElements() {
-            activeMarkers.forEach(m => m.setMap(null));
+            activeMarkers.forEach(marker => marker.setMap(null));
             activeMarkers = [];
             if (currentPolyline) { currentPolyline.setMap(null); currentPolyline = null; }
-            closePanel();
-
-            const defaultIcon = new AMap.Icon({
-                size: new AMap.Size(25, 34),
-                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-                imageSize: new AMap.Size(25, 34)
-            });
-
-            let linePath = [];
-
+            const routePoints = getRoutePoints();
+            const routeIds = new Set(routePoints.map(point => point.id));
+            const linePath = [];
             huaniaoPoints.forEach(point => {
-                let isMatch = false;
-                let matchedCharIndex = 0;
-
-                if (currentMode === 'point') {
-                    isMatch = true;
-                } else if (currentMode === 'char' && selectedCharacter) {
-                    const idx = point.characters.findIndex(c => c.name === selectedCharacter);
-                    if (idx !== -1) {
-                        isMatch = true;
-                        matchedCharIndex = idx;
-                        linePath.push(point.position);
-                    }
-                }
-
-                if (isMatch) {
-                    const marker = new AMap.Marker({
-                        position: point.position,
-                        title: point.title,
-                        icon: defaultIcon,
-                        offset: new AMap.Pixel(-12, -34),
-                        map: map
-                    });
-                    marker.on('click', () => { showPanel(point, matchedCharIndex); });
-                    activeMarkers.push(marker);
-                }
-            });
-
-            if (currentMode === 'char' && linePath.length > 1) {
-                currentPolyline = new AMap.Polyline({
-                    path: linePath,
-                    isOutline: true,
-                    outlineColor: '#ffffff',
-                    borderWeight: 2,
-                    strokeColor: '#10b981',
-                    strokeOpacity: 0.9,
-                    strokeWeight: 4,
-                    strokeStyle: "dashed",
-                    strokeDasharray: [10, 5],
-                    lineJoin: 'round',
+                const matchedIndex = point.characters.findIndex(character => character.name === selectedCharacter);
+                const isVisible = currentMode === 'point' || routeIds.has(point.id);
+                if (!isVisible) return;
+                const isPlanned = plannedPointIds.has(point.id);
+                const marker = new AMap.Marker({
+                    position: point.position,
+                    title: point.title,
+                    offset: new AMap.Pixel(-14, -38),
+                    content: `<div style="width:28px;height:36px;border-radius:15px 15px 15px 2px;transform:rotate(-45deg);background:${isPlanned ? '#d96d4e' : '#0b7166'};border:2px solid #fff;box-shadow:0 3px 8px rgba(15,50,43,.28);display:grid;place-items:center"><span style="transform:rotate(45deg);color:#fff;font:700 12px sans-serif">${point.id}</span></div>`,
                     map: map
                 });
-                map.setFitView([currentPolyline]);
+                marker.on('click', () => showPanel(point, Math.max(0, matchedIndex)));
+                activeMarkers.push(marker);
+                if (currentMode === 'char' && routeIds.has(point.id)) linePath.push(point.position);
+            });
+            if (currentMode === 'char' && linePath.length > 1) {
+                currentPolyline = new AMap.Polyline({ path: linePath, isOutline: true, outlineColor: '#ffffff', borderWeight: 3, strokeColor: '#0b7166', strokeOpacity: .95, strokeWeight: 5, strokeStyle: 'dashed', strokeDasharray: [12, 7], lineJoin: 'round', map: map });
+                map.setFitView([currentPolyline], false, [70, 40, 170, 40]);
             }
+            updateTripBar();
         }
 
         function switchMode(mode) {
             currentMode = mode;
             document.getElementById('modePoint').classList.toggle('active', mode === 'point');
             document.getElementById('modeChar').classList.toggle('active', mode === 'char');
-            document.getElementById('charSelectorRow').style.display = mode === 'char' ? 'flex' : 'none';
-
-            if (mode === 'point') {
-                selectedCharacter = '';
-                document.querySelectorAll('.btn-char').forEach(b => b.classList.remove('active'));
-            } else {
-                const firstCharBtn = document.querySelector('.btn-char');
-                if (firstCharBtn) firstCharBtn.click();
+            document.getElementById('characterStrip').classList.toggle('visible', mode === 'char');
+            if (mode === 'char' && !selectedCharacter) {
+                const firstButton = document.querySelector('.character-btn');
+                if (firstButton) selectCharacter(firstButton.textContent, firstButton);
                 return;
             }
+            closePanel();
             renderMapElements();
         }
 
-        function selectCharacter(charName, element) {
-            selectedCharacter = charName;
-            document.querySelectorAll('.btn-char').forEach(b => b.classList.remove('active'));
+        function selectCharacter(character, element) {
+            selectedCharacter = character;
+            document.querySelectorAll('.character-btn').forEach(button => button.classList.remove('active'));
             element.classList.add('active');
+            closePanel();
             renderMapElements();
         }
 
-        function showPanel(data, matchedIndex = 0) {
-            currentPointData = data;
-            document.getElementById('locationTitle').innerText = data.title;
-            const tabsContainer = document.getElementById('charTabs');
-            
+        function updateTripBar() {
+            const points = getRoutePoints();
+            const tripKicker = document.getElementById('tripKicker');
+            const tripTitle = document.getElementById('tripTitle');
+            const tripStat = document.getElementById('tripStat');
+            const tripRoute = document.getElementById('tripRoute');
             if (currentMode === 'char') {
-                document.getElementById('popupCharTabSection').style.display = 'none';
-                renderCharacterDetail(data.characters[matchedIndex]);
+                const stats = routeStats(points);
+                tripKicker.textContent = 'CHARACTER ROUTE';
+                tripTitle.textContent = `${selectedCharacter} · 推荐拍摄动线`;
+                tripStat.textContent = points.length ? `${points.length} 站 · ${formatDuration(stats.minutes)}` : '暂无点位';
+            } else if (points.length) {
+                const stats = routeStats(points);
+                tripKicker.textContent = 'TODAY\'S PLAN';
+                tripTitle.textContent = '今日计划已整理';
+                tripStat.textContent = `${points.length} 站 · ${formatDuration(stats.minutes)}`;
             } else {
-                document.getElementById('popupCharTabSection').style.display = 'block';
-                tabsContainer.innerHTML = data.characters.map((char, index) => {
-                    return `<button class="char-tab btn ${index === matchedIndex ? 'active' : ''}" style="border-radius:12px; padding:4px 10px; font-size:12px;" onclick="switchCharacter(${index}, this)">${char.name}</button>`;
-                }).join('');
-                renderCharacterDetail(data.characters[matchedIndex]);
+                tripKicker.textContent = 'TODAY\'S PLAN';
+                tripTitle.textContent = '从地点详情加入今日计划';
+                tripStat.textContent = '0 站';
             }
+            tripRoute.innerHTML = points.length ? points.map(point => `<span class="trip-stop ${completedPointIds.has(point.id) ? 'done' : ''}">${point.shortTitle}</span>`).join('') : '<span class="trip-empty">先挑选想拍的地点，再按顺序出发。</span>';
+        }
 
+        function showPanel(point, matchedIndex) {
+            currentPointData = point;
+            currentCharacterIndex = matchedIndex;
+            document.getElementById('locationTitle').textContent = point.title;
+            document.getElementById('priority').textContent = point.priority;
+            document.getElementById('locationMeta').innerHTML = `<span class="meta-chip">最佳：${point.bestTime}</span><span class="meta-chip">拍摄约 ${point.duration} 分钟</span><span class="meta-chip">${point.walking}</span>`;
+            document.getElementById('conditions').innerHTML = point.conditions.map(condition => `<span class="condition">${condition}</span>`).join('');
+            document.getElementById('travelTip').textContent = point.travelTip;
+            const section = document.getElementById('characterSection');
+            section.style.display = currentMode === 'char' ? 'none' : 'block';
+            const tabs = document.getElementById('charTabs');
+            tabs.innerHTML = point.characters.map((character, index) => `<button class="char-tab ${index === matchedIndex ? 'active' : ''}" onclick="switchCharacter(${index}, this)">${character.name}</button>`).join('');
+            renderCharacterDetail(point.characters[matchedIndex]);
+            updatePointActions();
             document.getElementById('infoPanel').classList.add('active');
-            map.panTo([data.position[0], data.position[1] - 0.0012]);
+            document.body.classList.add('sheet-open');
+            map.panTo(point.position);
         }
 
         function switchCharacter(index, element) {
+            currentCharacterIndex = index;
             document.querySelectorAll('.char-tab').forEach(tab => tab.classList.remove('active'));
             element.classList.add('active');
-            if (currentPointData && currentPointData.characters[index]) {
-                renderCharacterDetail(currentPointData.characters[index]);
-            }
+            renderCharacterDetail(currentPointData.characters[index]);
         }
 
-        function renderCharacterDetail(charData) {
-            document.getElementById('locationDesc').innerText = charData.desc;
-            const sceneGrid = document.getElementById('sceneGrid');
-            sceneGrid.innerHTML = charData.scenes.map(url => `<img src="${url}" alt="环境" onclick="openLightbox('${url}')">`).join('');
-            const poseGrid = document.getElementById('poseGrid');
-            poseGrid.innerHTML = charData.poses.map(url => `<img src="${url}" alt="动作" onclick="openLightbox('${url}')">`).join('');
+        function renderCharacterDetail(character) {
+            currentCharacterData = character;
+            document.getElementById('locationDesc').textContent = character.desc;
+            document.getElementById('sceneGrid').innerHTML = character.scenes.map((url, index) => `<img src="${url}" alt="${character.name} 环境参考" onclick="openLightbox('scene', ${index})">`).join('');
+            document.getElementById('poseGrid').innerHTML = character.poses.map((url, index) => `<img src="${url}" alt="${character.name} 动作参考" onclick="openLightbox('pose', ${index})">`).join('');
+            document.getElementById('poseCount').textContent = `${character.poses.length} 张参考`;
         }
 
-        function closePanel() { document.getElementById('infoPanel').classList.remove('active'); }
-        function openLightbox(url) { const img = document.getElementById('lightboxImg'); img.src = url; document.getElementById('lightbox').classList.add('active'); }
+        function updatePointActions() {
+            const saved = plannedPointIds.has(currentPointData.id);
+            const completed = completedPointIds.has(currentPointData.id);
+            const saveButton = document.getElementById('saveButton');
+            const doneButton = document.getElementById('doneButton');
+            saveButton.textContent = saved ? '移出计划' : '加入计划';
+            saveButton.classList.toggle('saved', saved);
+            doneButton.textContent = completed ? '取消完成' : '标记完成';
+            doneButton.classList.toggle('saved', completed);
+        }
+
+        function togglePlan() {
+            if (plannedPointIds.has(currentPointData.id)) plannedPointIds.delete(currentPointData.id);
+            else plannedPointIds.add(currentPointData.id);
+            saveSet('huaniao-photo-plan', plannedPointIds);
+            updatePointActions();
+            renderMapElements();
+        }
+
+        function toggleComplete() {
+            if (completedPointIds.has(currentPointData.id)) completedPointIds.delete(currentPointData.id);
+            else completedPointIds.add(currentPointData.id);
+            saveSet('huaniao-photo-completed', completedPointIds);
+            updatePointActions();
+            updateTripBar();
+        }
+
+        function openNavigation() {
+            const [longitude, latitude] = currentPointData.position;
+            const url = `https://uri.amap.com/marker?position=${longitude},${latitude}&name=${encodeURIComponent(currentPointData.title)}&coordinate=gaode&callnative=1`;
+            window.open(url, '_blank', 'noopener');
+        }
+
+        function closePanel() {
+            document.getElementById('infoPanel').classList.remove('active');
+            document.body.classList.remove('sheet-open');
+        }
+
+        function openLightbox(type, index) {
+            lightboxItems = type === 'pose' ? currentCharacterData.poses : currentCharacterData.scenes;
+            lightboxIndex = index;
+            resetLightboxZoom();
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function updateLightbox() {
+            const total = lightboxItems.length;
+            document.getElementById('lightboxImg').src = lightboxItems[lightboxIndex];
+            document.getElementById('lightboxCount').textContent = `${lightboxIndex + 1} / ${total}`;
+            document.getElementById('lightboxPrev').disabled = total <= 1;
+            document.getElementById('lightboxNext').disabled = total <= 1;
+        }
+
+        function changeLightboxZoom(amount) {
+            lightboxZoom = Math.min(2.5, Math.max(1, lightboxZoom + amount));
+            document.getElementById('lightboxImg').style.transform = `scale(${lightboxZoom})`;
+        }
+
+        function resetLightboxZoom() {
+            lightboxZoom = 1;
+            document.getElementById('lightboxImg').style.transform = 'scale(1)';
+        }
+
+        function showLightboxImage(direction) {
+            if (lightboxItems.length <= 1) return;
+            lightboxIndex = (lightboxIndex + direction + lightboxItems.length) % lightboxItems.length;
+            resetLightboxZoom();
+            updateLightbox();
+        }
+
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+
+        document.addEventListener('keydown', event => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (event.key === 'Escape') closeLightbox();
+            if (event.key === 'ArrowLeft') showLightboxImage(-1);
+            if (event.key === 'ArrowRight') showLightboxImage(1);
+        });
+
+        window.onload = function () {
+            if (!huaniaoPoints.length) { alert('未检测到有效拍摄数据，请检查 data.js 是否配置正确。'); return; }
+            initFilterUI();
+            initMap();
+        };
     </script>
 </body>
 </html>

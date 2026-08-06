@@ -9,6 +9,13 @@ window.HUANIAO_MAP_DATA = [
         id: 1,
         position: [122.69783, 30.848415],
         title: "南岙沙滩",
+        shortTitle: "南岙沙滩",
+        priority: "必去",
+        bestTime: "退潮前后 2 小时",
+        duration: 90,
+        walking: "从村口步行约 8 分钟",
+        conditions: ["看潮汐", "日落友好"],
+        travelTip: "礁石区域湿滑，建议穿防滑鞋；先拍礁石与白房子，再沿海岸等低机位逆光。",
         characters: [
             {
                 name: "守岸人",
@@ -106,6 +113,13 @@ window.HUANIAO_MAP_DATA = [
         id: 2,
         position: [122.69547, 30.851743],
         title: "致爱书房",
+        shortTitle: "致爱书房",
+        priority: "室内备选",
+        bestTime: "10:00 - 16:00",
+        duration: 45,
+        walking: "南岙沙滩步行约 12 分钟",
+        conditions: ["避雨备选", "可换装"],
+        travelTip: "优先确认书房开放状态。钢琴与门框适合低饱和、安静的近景；下雨或正午时可先来这里。",
         characters: [
             {
                 name: "守岸人",
@@ -125,6 +139,13 @@ window.HUANIAO_MAP_DATA = [
         id: 3,
         position: [122.693911, 30.844471],
         title: "玛塔草坪秋千",
+        shortTitle: "玛塔秋千",
+        priority: "光线优先",
+        bestTime: "15:30 - 日落",
+        duration: 40,
+        walking: "致爱书房步行约 10 分钟",
+        conditions: ["晴天优先", "逆光好看"],
+        travelTip: "下午侧逆光更柔和；草地风大时准备发夹，秋千需注意其他游客并保留安全距离。",
         characters: [
             {
                 name: "守岸人",
