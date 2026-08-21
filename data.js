@@ -106,6 +106,28 @@ window.HUANIAO_MAP_DATA = [
                     "./pose/shatan/37/15.png",
                     "./pose/shatan/37/16.png",
                 ]
+            },
+                 {
+                name: "水陈",
+                desc: "退潮的时候适合去拍，许多白房子也可以当背景，晚上可海岸附近拍",
+                scenes: ["./scene/nanaoshatan/nanaoshatan.jpg"],
+                poses: [
+                    "./pose/shatan/shuichen/1.png",
+                    "./pose/shatan/shuichen/3.png",
+                    "./pose/shatan/shuichen/4.png",
+                    "./pose/shatan/shuichen/5.png",
+                    "./pose/shatan/shuichen/6.png",
+                    "./pose/shatan/shuichen/7.png",
+                    "./pose/shatan/shuichen/8.png",
+                    "./pose/shatan/shuichen/9.png",
+                    "./pose/shatan/shuichen/10.png",
+                    "./pose/shatan/shuichen/11.png",
+                    "./pose/shatan/shuichen/12.png",
+                    "./pose/shatan/shuichen/13.png",
+                    "./pose/shatan/shuichen/14.png",
+                    "./pose/shatan/shuichen/15.png",
+                    "./pose/shatan/shuichen/16.png",
+                ]
             }
         ]
     },
@@ -155,15 +177,6 @@ window.HUANIAO_MAP_DATA = [
                     "./pose/qiuqian/shouanren/1.jpg",
                 ]
             },
-             {
-                name: "茉莉",
-                desc: "茉莉坐在秋千上，双手握住绳子，微微低头，侧身看向镜头，展现出温柔和优雅的气质",
-                scenes: ["./scene/caopingqiuqian/qiuqian.jpg"],
-                poses: [
-                    "./pose/qiuqian/moli/1.jpg",
-                    "./pose/qiuqian/moli/2.jpg",
-                ]
-            }
         ]
     }
 ];
