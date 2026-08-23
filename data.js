@@ -180,3 +180,78 @@ window.HUANIAO_MAP_DATA = [
         ]
     }
 ];
+window.HUANIAO_TRIP_INFO = {
+    title: "花鸟岛旅拍",
+    dates: "9.6 - 9.8",
+    duration: "三天两夜",
+    transport: {
+        outbound: {
+            route: "上海市区 → 地铁16号线（滴水湖站）→ 换乘洋山专线公交 → 沈家湾码头 → 乘坐直达船 → 花鸟岛",
+            landTravel: "整段陆路车程约 3.5 小时",
+            schedule: [
+                { time: "07:30", detail: "必须在地铁16号线出发" },
+                { time: "09:00 / 09:50", detail: "洋山专线时间节点，需严格卡准" },
+                { time: "11:00 前", detail: "抵达沈家湾码头，办理取票与安检" },
+                { time: "11:45", detail: "开往花鸟岛的直达船" }
+            ],
+            costs: [
+                { item: "地铁 + 洋山专线", price: "约 20 元" },
+                { item: "直达联票（含船票 / 景区门票 / 观光车）", price: "320 元" },
+                { item: "单人合计", price: "约 340 元", total: true }
+            ],
+            note: "一船直达花鸟岛，无需中间岛屿换乘，行李放好后省心省力；直达客船舒适度较高。缺点是清晨出发时间紧凑，必须严格卡准 16 号线与洋山专线的时间节点。"
+        },
+        returnTrip: {
+            cost: "185 元",
+            departure: "14:15"
+        }
+    },
+    gear: {
+        costumes: [
+            { name: "守岸人", detail: "原皮 cos服" },
+            { name: "美树沙耶香", detail: "" },
+            { name: "爱莉泳装", detail: "崩坏三" },
+            { name: "37", detail: "重返未来1999" },
+            { name: "水陈", detail: "" }
+        ],
+        costumeCount: "共计 5 套",
+        makeup: ["补妆用品"],
+        dolls: ["洛天（娃娃）"],
+        photography: [
+            "AD200 ×4", "V860三代 ×1", "k55 柔光箱", "菲涅尔透镜",
+            "S卡盘 ×3", "标准罩", "热熔胶枪", "猪嘴",
+            "MT02 ×3", "水袋 ×2", "色片（黄、多彩）",
+            "相机、镜头（存储卡提前清空）", "ND / CPL 滤镜（待购）"
+        ],
+        props: ["泳圈", "花（37用）", "花嫁花（守岸人钢琴）", "彩带"],
+        medicine: ["感冒药", "拉肚子药"],
+        snacks: ["补充干粮"]
+    },
+    itinerary: [
+        {
+            day: 1, title: "第一天", date: "9.6",
+            items: [
+                { type: "transport", icon: "🚢", label: "集合 / 去程", detail: "上海市区出发 → 地铁16号线 → 洋山专线 → 沈家湾 → 11:45 直达船 → 花鸟岛" },
+                { type: "scout", icon: "📍", label: "踩点", detail: "上岛后确认各拍摄机位与光线条件" },
+                { type: "shoot", icon: "📸", label: "拍摄 · 守岸人（原皮）", detail: "南岙沙滩 / 致爱书房 / 玛塔秋千", pointIds: [1, 2, 3], characters: ["守岸人"] }
+            ]
+        },
+        {
+            day: 2, title: "第二天", date: "9.7",
+            items: [
+                { type: "shoot", icon: "📸", label: "拍摄 · 水陈", pointIds: [1], characters: ["水陈"] },
+                { type: "shoot", icon: "📸", label: "拍摄 · 爱莉泳装", pointIds: [1], characters: ["爱莉泳装"] },
+                { type: "rest", icon: "☀️", label: "中午休息" },
+                { type: "shoot", icon: "📸", label: "拍摄 · 37（重返未来1999）", pointIds: [1], characters: ["37"] },
+                { type: "shoot", icon: "📸", label: "拍摄 · 美树沙耶香", pointIds: [1], characters: ["美树沙耶香"] }
+            ]
+        },
+        {
+            day: 3, title: "第三天", date: "9.8",
+            items: [
+                { type: "backup", icon: "🔁", label: "候补拍摄", detail: "前一天没拍完的内容进行补拍" },
+                { type: "transport", icon: "🚢", label: "返程", detail: "14:15 离岛，乘坐直达船返回" }
+            ]
+        }
+    ]
+};

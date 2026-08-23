@@ -97,6 +97,56 @@
             .info-panel.active { transform: translateX(0); }
             .sheet-handle { display: none; }
         }
+        .overview-overlay { position: fixed; inset: 0; z-index: 25; display: flex; flex-direction: column; background: var(--sand); transform: translateY(100%); transition: transform .35s cubic-bezier(.22,.8,.26,1); }
+        .overview-overlay.active { transform: translateY(0); }
+        .ov-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: max(14px, env(safe-area-inset-top)) 16px 12px; background: var(--ink); color: white; }
+        .ov-header-left { flex: 1; min-width: 0; }
+        .ov-kicker { color: #a9c9bd; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+        .ov-title { margin-top: 2px; font-size: 19px; font-weight: 800; }
+        .ov-dates { margin-top: 5px; display: flex; gap: 6px; }
+        .ov-date-chip { padding: 4px 8px; border-radius: 8px; background: #24473f; color: #d5e8df; font-size: 11px; font-weight: 700; }
+        .ov-close { flex: 0 0 auto; width: 34px; height: 34px; border: 0; border-radius: 10px; background: rgba(255,255,255,.12); color: white; cursor: pointer; font-size: 18px; }
+        .ov-body { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: max(30px, env(safe-area-inset-bottom)); }
+        .ov-card { margin-bottom: 14px; padding: 16px; border-radius: 16px; background: var(--card); box-shadow: 0 6px 18px rgba(17,54,45,.08); }
+        .ov-card-title { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 15px; font-weight: 800; color: var(--ink); }
+        .ov-card-title::before { content: ""; width: 4px; height: 16px; border-radius: 2px; background: var(--sea); }
+        .ov-route { font-size: 12px; line-height: 1.7; color: #42534c; }
+        .ov-timeline { margin-top: 12px; }
+        .ov-timeline-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+        .ov-timeline-item:last-child { border-bottom: 0; }
+        .ov-time { flex: 0 0 auto; min-width: 64px; font-size: 11px; font-weight: 800; color: var(--sea); }
+        .ov-time-detail { font-size: 12px; line-height: 1.6; color: #42534c; }
+        .ov-costs { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .ov-cost-row { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-radius: 9px; background: var(--foam); font-size: 12px; }
+        .ov-cost-row.total { background: #fff9ef; border: 1px solid #f0d8bd; font-weight: 800; }
+        .ov-cost-price { flex: 0 0 auto; font-weight: 800; color: var(--coral); }
+        .ov-note { margin-top: 12px; padding: 11px 12px; border-radius: 11px; background: #fff9ef; border: 1px solid #f0d8bd; font-size: 11px; line-height: 1.7; color: #6d5140; }
+        .ov-return { display: flex; gap: 10px; margin-top: 12px; }
+        .ov-return-item { flex: 1; padding: 10px; border-radius: 11px; background: var(--foam); text-align: center; }
+        .ov-return-label { font-size: 10px; color: var(--muted); font-weight: 700; }
+        .ov-return-value { margin-top: 3px; font-size: 14px; font-weight: 800; color: var(--ink); }
+        .ov-gear-group { margin-bottom: 12px; }
+        .ov-gear-group:last-child { margin-bottom: 0; }
+        .ov-gear-label { font-size: 12px; font-weight: 800; color: var(--sea); margin-bottom: 7px; }
+        .ov-gear-items { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ov-gear-chip { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 9px; border: 1px solid var(--line); background: white; font-size: 11px; cursor: pointer; user-select: none; }
+        .ov-gear-chip.checked { background: #e8f5ee; border-color: #a3cdb9; color: #5a8a6f; text-decoration: line-through; }
+        .ov-gear-check { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid #b8c5be; flex: 0 0 auto; display: grid; place-items: center; font-size: 9px; color: transparent; }
+        .ov-gear-chip.checked .ov-gear-check { border-color: #4a9d7e; background: #4a9d7e; color: white; }
+        .ov-day-card { margin-bottom: 14px; }
+        .ov-day-card:last-child { margin-bottom: 0; }
+        .ov-day-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+        .ov-day-badge { padding: 4px 10px; border-radius: 999px; background: var(--ink); color: white; font-size: 11px; font-weight: 800; }
+        .ov-day-date { font-size: 11px; color: var(--muted); font-weight: 700; }
+        .ov-day-items { display: flex; flex-direction: column; gap: 8px; }
+        .ov-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 12px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); }
+        .ov-item.clickable { cursor: pointer; }
+        .ov-item.clickable:active { background: var(--foam); }
+        .ov-item-icon { flex: 0 0 auto; font-size: 18px; line-height: 1.4; }
+        .ov-item-body { flex: 1; min-width: 0; }
+        .ov-item-label { font-size: 13px; font-weight: 800; color: var(--ink); }
+        .ov-item-detail { margin-top: 3px; font-size: 11px; line-height: 1.6; color: var(--muted); }
+        .ov-item-arrow { flex: 0 0 auto; align-self: center; color: var(--sea); font-size: 16px; }
     </style>
 </head>
 <body>
@@ -109,6 +159,7 @@
         <div class="mode-switch">
             <button id="modePoint" class="mode-btn active" onclick="switchMode('point')">全部点位</button>
             <button id="modeChar" class="mode-btn" onclick="switchMode('char')">角色动线</button>
+            <button id="modeOverview" class="mode-btn" onclick="showOverview()">行程总览</button>
         </div>
         <div id="characterStrip" class="character-strip"><span class="character-label">选择角色</span><div id="charFilterButtons"></div></div>
     </div>
@@ -144,6 +195,18 @@
         <button id="lightboxNext" class="lightbox-nav lightbox-next" aria-label="下一张" onclick="event.stopPropagation(); showLightboxImage(1)">›</button>
         <div class="zoom-controls" onclick="event.stopPropagation()"><button class="zoom-btn" aria-label="放大图片" onclick="changeLightboxZoom(.25)">＋</button><button class="zoom-btn" aria-label="缩小图片" onclick="changeLightboxZoom(-.25)">−</button><button class="zoom-btn" aria-label="还原图片" onclick="resetLightboxZoom()">还原</button></div>
         <span id="lightboxCount" class="lightbox-count"></span>
+    </div>
+
+    <div id="overviewPanel" class="overview-overlay">
+        <div class="ov-header">
+            <div class="ov-header-left">
+                <div class="ov-kicker">TRIP OVERVIEW</div>
+                <div class="ov-title" id="ovTitle">花鸟岛旅拍</div>
+                <div class="ov-dates" id="ovDates"></div>
+            </div>
+            <button class="ov-close" aria-label="关闭总览" onclick="closeOverview()">×</button>
+        </div>
+        <div class="ov-body" id="ovBody"></div>
     </div>
 
     <script>
@@ -401,6 +464,101 @@
             if (event.key === 'ArrowLeft') showLightboxImage(-1);
             if (event.key === 'ArrowRight') showLightboxImage(1);
         });
+
+        let gearChecked = loadGearSet();
+
+        function loadGearSet() {
+            try { return new Set(JSON.parse(localStorage.getItem('huaniao-gear-check') || '[]')); } catch (error) { return new Set(); }
+        }
+
+        function saveGearSet(value) {
+            try { localStorage.setItem('huaniao-gear-check', JSON.stringify(Array.from(value))); } catch (error) { }
+        }
+
+        function showOverview() {
+            document.getElementById('modeOverview').classList.add('active');
+            renderOverview();
+            document.getElementById('overviewPanel').classList.add('active');
+        }
+
+        function closeOverview() {
+            document.getElementById('overviewPanel').classList.remove('active');
+            document.getElementById('modeOverview').classList.remove('active');
+        }
+
+        function renderOverview() {
+            const info = window.HUANIAO_TRIP_INFO;
+            if (!info) return;
+            document.getElementById('ovTitle').textContent = info.title;
+            document.getElementById('ovDates').innerHTML = `<span class="ov-date-chip">${info.dates}</span><span class="ov-date-chip">${info.duration}</span>`;
+            let html = '';
+            const t = info.transport;
+            html += `<div class="ov-card"><div class="ov-card-title">往返出行</div>`;
+            html += `<div class="ov-route">${t.outbound.route}</div>`;
+            html += `<div class="ov-route" style="margin-top:6px;color:var(--muted)">${t.outbound.landTravel}</div>`;
+            html += `<div class="ov-timeline">`;
+            t.outbound.schedule.forEach(s => { html += `<div class="ov-timeline-item"><div class="ov-time">${s.time}</div><div class="ov-time-detail">${s.detail}</div></div>`; });
+            html += `</div><div class="ov-costs">`;
+            t.outbound.costs.forEach(c => { html += `<div class="ov-cost-row${c.total ? ' total' : ''}"><span>${c.item}</span><span class="ov-cost-price">${c.price}</span></div>`; });
+            html += `</div><div class="ov-note">${t.outbound.note}</div>`;
+            html += `<div class="ov-return"><div class="ov-return-item"><div class="ov-return-label">离岛船票</div><div class="ov-return-value">${t.returnTrip.cost}</div></div><div class="ov-return-item"><div class="ov-return-label">离岛时间</div><div class="ov-return-value">${t.returnTrip.departure}</div></div></div></div>`;
+
+            const g = info.gear;
+            html += `<div class="ov-card"><div class="ov-card-title">物品准备</div>`;
+            html += `<div class="ov-gear-group"><div class="ov-gear-label">服装 / 假发 <span style="color:var(--muted);font-weight:400">${g.costumeCount}</span></div><div class="ov-gear-items">`;
+            g.costumes.forEach((c, i) => { html += renderGearChip('costume', i, c.detail ? `${c.name}（${c.detail}）` : c.name); });
+            html += `</div></div>`;
+            [{ key: 'makeup', label: '补妆用品' }, { key: 'dolls', label: '娃娃' }, { key: 'photography', label: '摄影器材' }, { key: 'props', label: '道具' }, { key: 'medicine', label: '药品' }, { key: 'snacks', label: '零食' }].forEach(cat => {
+                const items = g[cat.key];
+                if (!items || !items.length) return;
+                html += `<div class="ov-gear-group"><div class="ov-gear-label">${cat.label}</div><div class="ov-gear-items">`;
+                items.forEach((item, i) => { html += renderGearChip(cat.key, i, item); });
+                html += `</div></div>`;
+            });
+            html += `</div>`;
+
+            html += `<div class="ov-card"><div class="ov-card-title">三日行程</div>`;
+            info.itinerary.forEach(day => {
+                html += `<div class="ov-day-card"><div class="ov-day-header"><span class="ov-day-badge">${day.title}</span><span class="ov-day-date">${day.date}</span></div><div class="ov-day-items">`;
+                day.items.forEach(item => {
+                    const clickable = item.pointIds && item.pointIds.length;
+                    const onclickAttr = clickable ? ` onclick="jumpToPoint(${item.pointIds[0]}, '${(item.characters || [''])[0]}')"` : '';
+                    const arrow = clickable ? `<span class="ov-item-arrow">›</span>` : '';
+                    const detail = item.detail ? `<div class="ov-item-detail">${item.detail}</div>` : '';
+                    html += `<div class="ov-item${clickable ? ' clickable' : ''}"${onclickAttr}><span class="ov-item-icon">${item.icon}</span><div class="ov-item-body"><div class="ov-item-label">${item.label}</div>${detail}</div>${arrow}</div>`;
+                });
+                html += `</div></div>`;
+            });
+            html += `</div>`;
+
+            document.getElementById('ovBody').innerHTML = html;
+            renderGearStates();
+        }
+
+        function renderGearChip(cat, idx, label) {
+            return `<span class="ov-gear-chip" data-cat="${cat}" data-idx="${idx}" onclick="toggleGear(this)"><span class="ov-gear-check">✓</span>${label}</span>`;
+        }
+
+        function toggleGear(el) {
+            const key = el.dataset.cat + '-' + el.dataset.idx;
+            if (gearChecked.has(key)) gearChecked.delete(key); else gearChecked.add(key);
+            saveGearSet(gearChecked);
+            el.classList.toggle('checked');
+        }
+
+        function renderGearStates() {
+            document.querySelectorAll('.ov-gear-chip').forEach(el => {
+                el.classList.toggle('checked', gearChecked.has(el.dataset.cat + '-' + el.dataset.idx));
+            });
+        }
+
+        function jumpToPoint(pointId, characterName) {
+            closeOverview();
+            const point = huaniaoPoints.find(p => p.id === pointId);
+            if (!point) return;
+            const charIdx = point.characters.findIndex(c => c.name === characterName);
+            showPanel(point, Math.max(0, charIdx));
+        }
 
         window.onload = function () {
             if (!huaniaoPoints.length) { alert('未检测到有效拍摄数据，请检查 data.js 是否配置正确。'); return; }
